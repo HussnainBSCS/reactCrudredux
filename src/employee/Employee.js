@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./employee.css";
 
-import { useSelector,useDispatch } from "react-redux";//read current value of state from store
-import { addUser,deleteUser } from "../features/Users";
+import {useGetAlluserQuery,useDeleteUserMutation, useCreateUserMutation,useUpdateUserMutation} from '../services/user';
 const axios = require("axios").default; 
 
 var editvar;
@@ -16,8 +15,29 @@ function Employee() {
   const [salary, setsalary] = useState('');
   const [employee, setemployee] = useState([]);
 
-  const userlist=useSelector((state)=>(state.users.value));
-  const usedispatch=useDispatch();
+  // Display
+  const responseInfo=useGetAlluserQuery();
+
+  // delete
+  const [deleteUser,responseInfodelete]=useDeleteUserMutation(); //accepts a function and a object
+
+  // Add New User 
+  const [newUser,responseInfonew]=useCreateUserMutation(); //accepts a function and a object
+  const adduser={
+    name:name,
+    position:position,
+    office:office,
+    salary:salary
+  }
+
+
+    const [updateUser,responseInfoupdate]=useUpdateUserMutation(); //accepts a function and a object
+    const updateuser={
+      name:name,
+      position:position,
+      office:office,
+      salary:salary
+    }
 
   // useEffect(() => {
   //   // Get
@@ -46,34 +66,35 @@ function Employee() {
   //       salary: Number(salary),
   //     })
   //     resetFields();
+  //   }
 
     
   // };
 
   // Put
-  const edituser=(_id,emp)=>{
-    editvar=true;
-    console.log("editemp",emp)
-    updateid=_id;
-    console.log(updateid)
-    // set values to input fields
-    document.getElementById('name').value=emp.name;
-    document.getElementById('position').value=emp.position;
-    document.getElementById('office').value=emp.office;
-    document.getElementById('salary').value=emp.salary;
-  }
+  // const edituser=(_id,emp)=>{
+  //   editvar=true;
+  //   console.log("editemp",emp)
+  //   updateid=_id;
+  //   console.log(updateid)
+  //   // set values to input fields
+  //   document.getElementById('name').value=emp.name;
+  //   document.getElementById('position').value=emp.position;
+  //   document.getElementById('office').value=emp.office;
+  //   document.getElementById('salary').value=emp.salary;
+  // }
   // Update USer
-  const updateuser=(updateid)=>{
-    if(editvar){
-      axios.put(`http://localhost:3000/employees/${updateid}`, {
-        name:document.getElementById('name').value,
-        position:document.getElementById('position').value,
-        office:document.getElementById('office').value,
-        salary:Number(document.getElementById('salary').value)
-    })
+  // const updateuser=(updateid)=>{
+  //   if(editvar){
+  //     axios.put(`http://localhost:3000/employees/${updateid}`, {
+  //       name:document.getElementById('name').value,
+  //       position:document.getElementById('position').value,
+  //       office:document.getElementById('office').value,
+  //       salary:Number(document.getElementById('salary').value)
+  //   })
     // resetFields();
-  }
-  }
+  // }
+  // }
 
   // Delete
   // function deleteuser(_id) {
@@ -83,14 +104,14 @@ function Employee() {
   return (
     <>
       <div className="formdata">
-        {/* <input
+        <input
           type="text"
           className="idField"
           placeholder="id"
           onChange={(event) => {
             setid(event.target.value);
           }}
-        ></input> */}
+        ></input>
         <input
           type="text"
           placeholder="Full name"
@@ -125,8 +146,8 @@ function Employee() {
         ></input>
         <div>
           {
-            editvar ? (<button onClick={()=>updateuser(updateid)} className="sbmt" placeholder="Submit edit">Update</button>):
-            (<button onClick={()=>{usedispatch(addUser({id:userlist[userlist.length-1].id+1,name:name,position:position,office:office,salary:salary}))}} className="sbmt" placeholder="Submit">Submit</button>)
+            editvar ? (<button className="sbmt" placeholder="Submit edit">Update</button>):
+            (<button onClick={()=>newUser(adduser)}  className="sbmt" placeholder="Submit">Submit</button>)
           }
         </div>
   
@@ -144,7 +165,7 @@ function Employee() {
             <div className="data-width">Actions</div>
           </li>
           <>
-            {userlist.map((emp) => {
+            { responseInfo.data?.map((emp) => {
               return (
                 <li className="table-row">
                   <div className="data-width">{emp.name}</div>
@@ -152,11 +173,11 @@ function Employee() {
                   <div className="data-width">{emp.office}</div>
                   <div className="data-width">{emp.salary}</div>
                   <div className="btns">
-                    <button className="edit" onClick={()=>edituser(emp.id,emp)}>Edit</button>
-                    <button onClick={() =>usedispatch(deleteUser({id:emp.id})) }>Delete</button>
+                    <button className="edit" onClick={()=>updateUser(emp._id)} >Edit</button>
+                    <button onClick={()=>deleteUser(emp._id)} >Delete</button>
                   </div>
                 </li>
-              );
+              );  
             })}
           </>
         </ul>

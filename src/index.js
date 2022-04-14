@@ -3,22 +3,13 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-
-// redux
-import {configureStore} from '@reduxjs/toolkit';
-import {Provider} from 'react-redux';
-import usersReducer from './features/Users'
-
-const store =configureStore({
-  reducer:{
-    users:usersReducer //users state
-  },
-})
+import {Provider} from 'react-redux'
+import {store} from '../src/store'
 
 ReactDOM.render(
-    <Provider store={store}>
-      <App />
-    </Provider>,
+     <Provider store={store}>
+         <App />
+      </Provider>,
   document.getElementById('root')
 );
 
