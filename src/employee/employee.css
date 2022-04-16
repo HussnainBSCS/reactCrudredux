@@ -84,4 +84,6 @@ input{
     background-color: #5095e4;
     color: white;
   }
-  
+  .update{
+    display: none;
+  }

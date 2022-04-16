@@ -1,43 +1,81 @@
 import React, { useState } from "react";
 import "./employee.css";
 
-import {useGetAlluserQuery,useDeleteUserMutation, useCreateUserMutation,useUpdateUserMutation} from '../services/user';
-const axios = require("axios").default; 
+import {useGetAlluserQuery,useDeleteUserMutation, useAddUserMutation,useUpdateUserMutation} from '../services/user';
 
-var editvar;
-var updateid;
 
 function Employee() {
+
   const [id, setid] = useState();
-  const [name, setname] = useState('');
-  const [position, setposition] = useState('');
-  const [office, setoffice] = useState('');
-  const [salary, setsalary] = useState('');
+  const [name, setname] = useState();
+  const [position, setposition] = useState();
+  const [office, setoffice] = useState();
+  const [salary, setsalary] = useState();
   const [employee, setemployee] = useState([]);
+    // Reset
+  function resetFields(){
+    document.getElementById('name').value='';
+    document.getElementById('position').value='';
+    document.getElementById('office').value='';
+    document.getElementById('salary').value='';
+  }
 
   // Display
   const responseInfo=useGetAlluserQuery();
 
-  // delete
-  const [deleteUser,responseInfodelete]=useDeleteUserMutation(); //accepts a function and a object
-
   // Add New User 
-  const [newUser,responseInfonew]=useCreateUserMutation(); //accepts a function and a object
-  const adduser={
+  const [addUser]=useAddUserMutation();
+  const {refetch}=useGetAlluserQuery();
+  const user={
     name:name,
     position:position,
     office:office,
     salary:salary
   }
+  const AddUser=async()=>{
+      await addUser(user);
+      refetch();
+      resetFields();
+  }
 
+  // Delete
+  const [deleteUser]=useDeleteUserMutation(); //accepts a function and a object
+  const DeleteUser=async(id)=>{
+    await deleteUser(id);
+    refetch();
+  }
 
-    const [updateUser,responseInfoupdate]=useUpdateUserMutation(); //accepts a function and a object
-    const updateuser={
-      name:name,
-      position:position,
-      office:office,
-      salary:salary
+  //Edit
+    const [updateUser]=useUpdateUserMutation(); //accepts a function and a object
+    const Edit=(emp)=>{
+      console.log("u:",emp)
+      document.getElementById('id').value=emp._id;
+      document.getElementById('name').value=emp.name;
+      document.getElementById('position').value=emp.position;
+      document.getElementById('office').value=emp.office;
+      document.getElementById('salary').value=emp.salary;
+      document.getElementById('update').style.display="inline";
+      document.getElementById('sbmt').style.display="none";
     }
+
+    //Update
+
+    const Update=async()=>{
+      const updateuser={
+        id:document.getElementById('id').value,
+        name:document.getElementById('name').value,
+        position:document.getElementById('position').value,
+        office:document.getElementById('office').value,
+        salary:document.getElementById('salary').value
+      }
+      await updateUser(updateuser);
+      refetch();
+      resetFields();
+      document.getElementById('update').style.display='none';
+      document.getElementById('sbmt').style.display="inline";
+
+    }
+
 
   // useEffect(() => {
   //   // Get
@@ -48,13 +86,7 @@ function Employee() {
   //     })
   // });
 
-  // Reset
-  // function resetFields(){
-  //   document.getElementById('name').value='';
-  //   document.getElementById('position').value='';
-  //   document.getElementById('office').value='';
-  //   document.getElementById('salary').value='';
-  // }
+
 
   // Post
   // const addUser = () => {
@@ -108,6 +140,7 @@ function Employee() {
           type="text"
           className="idField"
           placeholder="id"
+          id="id"
           onChange={(event) => {
             setid(event.target.value);
           }}
@@ -145,10 +178,8 @@ function Employee() {
           }}
         ></input>
         <div>
-          {
-            editvar ? (<button className="sbmt" placeholder="Submit edit">Update</button>):
-            (<button onClick={()=>newUser(adduser)}  className="sbmt" placeholder="Submit">Submit</button>)
-          }
+          <button className="sbmt update" onClick={()=>Update()} id="update" placeholder="Submit edit">Update</button>
+          <button onClick={AddUser}  className="sbmt" id="sbmt"  placeholder="Submit">Submit</button>
         </div>
   
        
@@ -173,8 +204,8 @@ function Employee() {
                   <div className="data-width">{emp.office}</div>
                   <div className="data-width">{emp.salary}</div>
                   <div className="btns">
-                    <button className="edit" onClick={()=>updateUser(emp._id)} >Edit</button>
-                    <button onClick={()=>deleteUser(emp._id)} >Delete</button>
+                    <button className="edit" id="edit" onClick={()=>Edit(emp)} >Edit</button>
+                    <button onClick={()=>DeleteUser(emp._id)} >Delete</button>
                   </div>
                 </li>
               );  

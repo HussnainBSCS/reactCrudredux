@@ -8,8 +8,8 @@ export const store = configureStore({
     [userAPi.reducerPath]: userAPi.reducer,
   },
 
-//   middleware: (getDefaultMiddleware) =>
-//     getDefaultMiddleware().concat(userAPi.middleware),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(userAPi.middleware),
 })
 
 // optional, but required for refetchOnFocus/refetchOnReconnect behaviors

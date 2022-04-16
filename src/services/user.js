@@ -1,7 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-
-
 export const userAPi=createApi({
+    
     reducerPath:'userApi', //unique key
     baseQuery:fetchBaseQuery({ //handles header like axios
         baseUrl:'http://localhost:3000/',
@@ -28,26 +27,23 @@ export const userAPi=createApi({
         }),
 
         // create a user
-        createUser:user.mutation({
-            query:(newUser)=>{
-                return{
+        addUser:user.mutation({
+            query:(newUser)=>({
                     url:'employees',
                     method:'POST',
                     body:newUser
-                }
-            }
+            })
         }),
 
          // update a user
          updateUser:user.mutation({
-             query:(updatedata,id)=>{
-                 console.log("updare",updatedata)
-                 console.log("updare id",id)
-
+             
+             query:(updateuser)=>{
+                 console.log("EMP:",updateuser)
                 return{
-                    url:`employees/${id}`,
+                    url:`employees/${updateuser.id}`,
                     method:'PUT',
-                    body:updatedata
+                    body:updateuser
                 }
 
              }
@@ -56,4 +52,4 @@ export const userAPi=createApi({
     }),
 
 })
-export const {useGetAlluserQuery,useDeleteUserMutation,useCreateUserMutation,useUpdateUserMutation}=userAPi; //hook for getting data
+export const {useGetAlluserQuery,useDeleteUserMutation,useAddUserMutation,useUpdateUserMutation}=userAPi; //hook for getting data
