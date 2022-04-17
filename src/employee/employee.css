@@ -87,3 +87,6 @@ input{
   .update{
     display: none;
   }
+  input::placeholder{
+    color: white;
+  }

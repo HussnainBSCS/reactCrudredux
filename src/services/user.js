@@ -18,12 +18,10 @@ export const userAPi=createApi({
 
         // delete a user
         deleteUser:user.mutation({
-            query:(id)=>{
-                return{
+            query:(id)=>({
                     url:`employees/${id}`,
                     method:'DELETE'
-                }
-            }
+            })
         }),
 
         // create a user
@@ -37,16 +35,11 @@ export const userAPi=createApi({
 
          // update a user
          updateUser:user.mutation({
-             
-             query:(updateuser)=>{
-                 console.log("EMP:",updateuser)
-                return{
+             query:(updateuser)=>({
                     url:`employees/${updateuser.id}`,
                     method:'PUT',
                     body:updateuser
-                }
-
-             }
+             })
          })
 
     }),

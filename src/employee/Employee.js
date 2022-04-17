@@ -3,7 +3,6 @@ import "./employee.css";
 
 import {useGetAlluserQuery,useDeleteUserMutation, useAddUserMutation,useUpdateUserMutation} from '../services/user';
 
-
 function Employee() {
 
   const [id, setid] = useState();
@@ -11,7 +10,7 @@ function Employee() {
   const [position, setposition] = useState();
   const [office, setoffice] = useState();
   const [salary, setsalary] = useState();
-  const [employee, setemployee] = useState([]);
+
     // Reset
   function resetFields(){
     document.getElementById('name').value='';
@@ -21,7 +20,7 @@ function Employee() {
   }
 
   // Display
-  const responseInfo=useGetAlluserQuery();
+  const Employee=useGetAlluserQuery();
 
   // Add New User 
   const [addUser]=useAddUserMutation();
@@ -32,8 +31,8 @@ function Employee() {
     office:office,
     salary:salary
   }
-  const AddUser=async()=>{
-      await addUser(user);
+  const AddUser=()=>{
+      addUser(user);
       refetch();
       resetFields();
   }
@@ -196,7 +195,7 @@ function Employee() {
             <div className="data-width">Actions</div>
           </li>
           <>
-            { responseInfo.data?.map((emp) => {
+            { Employee.data?.map((emp) => {
               return (
                 <li className="table-row">
                   <div className="data-width">{emp.name}</div>
