@@ -45,4 +45,4 @@ export const userAPi=createApi({
     }),
 
 })
-export const {useGetAlluserQuery,useDeleteUserMutation,useAddUserMutation,useUpdateUserMutation}=userAPi; //hook for getting data
+export const {useGetAlluserQuery,useDeleteUserMutation,useAddUserMutation,useUpdateUserMutation}=userAPi;

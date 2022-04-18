@@ -34,10 +34,7 @@ input{
     background-color: #6BCB77;
 }
 /* table */
-.sbmt:hover{
-    background-color: transparent;
-    border: solid white;
-}
+
 .btns {
     width: 20%;
   }
